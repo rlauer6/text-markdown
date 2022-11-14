@@ -1,7 +1,7 @@
 # WARNING
 
 This Readme is from the original version of Markdown; not all of the
-information contained herein is applicable to Test::Markdown the CPAN
+information contained herein is applicable to Text::Markdown the CPAN
 module that includes this file. See the module's POD file for
 more information.
 
@@ -21,7 +21,29 @@ Of course, all this is solved if you just download it from CPAN using,
 for instance,
 
 	cpanm Text::Markdown
-	
+
+## Create an rpm
+You should have all the rpm/autotools packages installed and a build
+directory in your home directory.
+
+```
+sudo yum install rpm-build
+
+sudo cpanm Module::Install Module::Install::CheckConflicts \
+     Test::Differences Test::Exceptions
+     
+mkdir -p ~/rpm/{RPM,SOURCES,BUILD,BUILDROOT,SPEC,SRPMS}
+
+echo "%_topdir $HOME/rpm" > $HOME/.rpmmacros
+```
+
+```
+git clone https://github.com/rlauer6/text-markdown.git
+cd text-markdown
+make -f Makefile.rpm rpm
+sudo yum install ~/rpm/RPM/noarch/perl-Text-Markdown-1.000032.tar.gz
+```
+
 Markdown
 ========
 
