@@ -1,0 +1,35 @@
+# -*- mode: makefile -*-
+
+RPM_SOURCES = ~/rpm/SOURCES
+TARBALL     = Text-Markdown.tar.gz
+SPEC_FILE   = perl-Text-Markdown.spec.in
+GSPEC_FILE  = $(SPEC_FILE:.spec.in=.spec)
+
+$(GSPEC_FILE): $(SPEC_FILE)
+	version=$$(perl -I ./lib -MText::Markdown -e 'print $$Text::Markdown::VERSION'); \
+	sed "s/\@version\@/$$version/;" $< >$@
+
+tarball: $(TARBALL)
+
+$(TARBALL):
+	set -x; \
+	test -d Text-Markdown || mkdir Text-Markdown; \
+	rsync -av --progress . Text-Markdown --exclude Text-Markdown; \
+	version=$$(perl -I ./lib -MText::Markdown -e 'print $$Text::Markdown::VERSION'); \
+	echo $$version; \
+	mv Text-Markdown Text-Markdown-$$version; \
+	tar cfvz $(TARBALL) Text-Markdown-$$version
+
+rpm: $(TARBALL) perl-Text-Markdown.spec $(GSPEC_FILE)
+	set -x; version=$$(perl -I ./lib -MText::Markdown -e 'print $$Text::Markdown::VERSION'); \
+	cp $(TARBALL) $(RPM_SOURCES)/Text-Markdown-$$version.tar.gz; \
+	rpmbuild -ba $(GSPEC_FILE)
+
+spec: $(GSPEC_FILE)
+
+.PHONY: rpm spec
+
+clean:
+	rm -f *.tar.gz
+	rm $(GSPEC_FILE)
+

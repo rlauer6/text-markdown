@@ -5,6 +5,7 @@ blib/
 pm_to_blib$
 Makefile$
 MANIFEST\.SKIP$
+perl-Text-Markdown.spec$
 MANIFEST\.bak$
 Makefile\.old$
 \.shipit
